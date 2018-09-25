@@ -10,12 +10,13 @@ X = []
 y = []
 X_new = []
 X_subset = []
+pltscore = []
 count = 0
 with open(input_file, 'r') as f:
     for line in f.readlines():
     	data = line[:-1].split(',')
-    	print("l shape: {}".format(len(data)))
-    	print(count)
+    	print("[Row no]----[Column no]: {}----{}".format(count,len(data)))
+    	# print("No of column: {}".format(len(data)))
     	X.append(data)
     	count = count + 1
 # Convert to numpy array
@@ -51,7 +52,7 @@ reg.fit(X_train, y_train)
  
 # variance score: 1 means perfect prediction
 parent_score = reg.score(X_test, y_test)
-
+pltscore.append(parent_score)
 
 ## setting plot style
 plt.style.use('fivethirtyeight')
@@ -113,6 +114,7 @@ while 1:
 
 	if parent_score < score:
 		parent_score = score
+		pltscore.append(score)
 		X = np.delete(X,j,1)
 	else:
 		break
@@ -154,4 +156,8 @@ plt.legend(loc = 'upper right')
 plt.title("Residual errors")
  
 ## function to show plot
+plt.show()
+# plt.ylim(0,1)
+plt.plot(pltscore)
+plt.ylabel('Score plot')
 plt.show()

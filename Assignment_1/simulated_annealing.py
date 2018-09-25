@@ -6,18 +6,21 @@ from sklearn import datasets, linear_model, metrics, preprocessing
 from sklearn.model_selection import train_test_split
 
 # load dataset which should not contain missing feature as '?'
-input_file = 'abalone.txt'
+input_file = 'demo.txt'
 
 X = []  # Feature matrix
 y = []  # Output column
 X_new = []
 X_subset = []
+pltscore = []
+count = 0
 # Read each row from the dataset except the last column 
 with open(input_file, 'r') as f:
     for line in f.readlines():
     	data = line[:-1].split(',')
+    	print("[Row no]----[Column no]: {}----{}".format(count,len(data)))
     	X.append(data)
-
+    	count = count + 1
 # Convert to numpy array to do operation efficiently
 X = np.array(X)
 
@@ -57,6 +60,7 @@ reg.fit(X_train, y_train)
  
 # variance score: 1 means perfect prediction
 parent_score = reg.score(X_test, y_test)
+pltscore.append(parent_score)
 print("Initial score : {}".format(parent_score))
 
 ## setting plot style
@@ -107,6 +111,8 @@ while T > 10:
 
 	if delta_E > 0:
 		parent_score = child_score
+		# print("score: {}".format(child_score))
+		pltscore.append(child_score)
 		X = X_new
 		j = i
 	else:
@@ -116,6 +122,8 @@ while T > 10:
 			# accept new child
 			X = X_new
 			parent_score = child_score
+			# print("score: {}".format(child_score))
+			pltscore.append(child_score)
 		else:
 			print("Parent not changed.")
 	# Change limit according to new feature matrix
@@ -160,3 +168,9 @@ reg.fit(X_train, y_train)
  
 # ## function to show plot
 # plt.show()
+
+# val = []
+pltscore.reverse()
+plt.plot(pltscore)
+plt.ylabel('')
+plt.show()
